@@ -1,0 +1,2159 @@
+# experiment 1 : Consider telephone book database of N clients. Make
+use of a hash table implementation to quickly look
+up client‘s telephone number. Make use of two
+collision handling techniques and compare them
+using number of comparisons required to find a set
+of telephone numbers. (Use Python Programming
+Language)
+
+
+# Telephone directory
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Record.py ( make a different tab )
+
+class Record:
+    def __init__(self):
+        self._name = None
+        self._number = None
+
+    def get_name(self):
+        return self._name
+
+    def get_number(self):
+        return self._number
+
+    def set_name(self,name):
+        self._name = name
+
+    def set_number(self,number):
+        self._number = number
+
+    def __str__(self):
+        record = "Name: "+str(self.get_name())+"\t"+"\tNumber: "+str(self.get_number())
+        return record
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# LinearProbing.py ( ANOTHER TAB WITH THIS NAME)
+
+# Program to implement Hashing with Linear Probing
+
+
+from Record import Record
+
+ 
+
+class hashTable:
+
+    # initialize hash Table
+
+    def __init__(self):
+
+        self.size = int(input("Enter the Size of the hash table : "))
+
+        # initialize table with all elements 0
+
+        self.table = list(None for i in range(self.size))
+
+        self.elementCount = 0
+
+        self.comparisons = 0
+
+   
+
+   
+
+    # method that checks if the hash table is full or not
+
+    def isFull(self):
+
+        if self.elementCount == self.size:
+
+            return True
+
+        else:
+
+            return False
+
+   
+
+   
+
+    # method that returns position for a given element
+
+    def hashFunction(self, element):
+
+        return element % self.size
+
+       
+
+   
+
+    # method that inserts element into the hash table
+
+    def insert(self, record):
+
+        # checking if the table is full
+
+        if self.isFull():
+
+            print("Hash Table Full")
+
+            return False
+
+           
+
+        isStored = False
+
+       
+
+        position = self.hashFunction(record.get_number())
+
+       
+
+        # checking if the position is empty
+
+        if self.table[position] == None:
+
+            self.table[position] = record
+
+            print("Phone number of " + record.get_name() + " is at position " + str(position))
+
+            isStored = True
+
+            self.elementCount += 1
+
+       
+
+        # collision occured hence we do linear probing
+
+        else:
+
+            print("Collision has occured for " + record.get_name() + "'s phone number at position " + str(position) + " finding new Position.")
+
+            while self.table[position] != None:
+
+                position += 1
+
+                if position >= self.size:
+
+                    position = 0
+
+           
+
+            self.table[position] = record
+
+            print("Phone number of " + record.get_name() + " is at position " + str(position))
+
+            isStored = True
+
+            self.elementCount += 1
+
+        return isStored
+
+       
+
+ 
+
+    # method that searches for an element in the table
+
+    # returns position of element if found
+
+    # else returns False
+
+    def search(self, record):
+
+        found = False
+
+       
+
+        position = self.hashFunction(record.get_number())
+
+        self.comparisons += 1
+
+
+        if(self.table[position] != None):
+
+            if(self.table[position].get_name() == record.get_name() and self.table[position].get_number() == record.get_number()):
+
+                isFound = True
+
+                print("Phone number found at position {} ".format(position) + " and total comparisons are " + str(1))
+
+                return position
+
+            
+
+                
+
+       
+
+        # if element is not found at position returned hash function
+
+        
+
+            else:
+
+                position += 1
+
+                if position >= self.size-1:
+
+                    position = 0
+
+                while self.table[position] != None or self.comparisons <= self.size:
+
+                   
+
+                    if(self.table[position].get_name() == record.get_name() and self.table[position].get_number() == record.get_number()):
+
+                        isFound = True
+
+                        #i=0
+
+                        i = self.comparisons + 1 
+
+                        print("Phone number found at position {} ".format(position) + " and total comparisons are " + str(i) )
+
+                        return position
+
+
+                    position += 1
+
+                    #print(position)
+
+                    if position >= self.size-1:
+
+                        position = 0
+
+
+                    #print(position)
+
+                    self.comparisons += 1
+
+                    #print(self.comparisons)
+
+                    
+
+                if isFound == False:
+
+                    print("Record not found")
+
+                    return false
+
+                        
+
+                               
+
+ 
+
+    # method to display the hash table
+
+    def display(self):
+
+        print("\n")
+
+        for i in range(self.size):
+
+            print("Hash Value: "+str(i) + "\t\t" + str(self.table[i]))
+
+        print("The number of phonebook records in the Table are : " + str(self.elementCount))
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Main.py ( ANOTHER TAB WITH THIS NAME)
+
+
+from LinearProbing import hashTable
+from Record import Record
+from DoubleHashing import doubleHashTable
+
+def input_record():
+    record = Record()
+    name = input("Enter Name:")
+    number = int(input("Enter Number:"))
+    record.set_name(name)
+    record.set_number(number)
+    return record
+    
+
+choice1 = 0
+while(choice1 != 3):
+    print("************************")
+    print("1. Linear Probing      *")
+    print("2. Double Hashing      *")
+    print("3. Exit                *")
+    print("************************")
+
+    choice1 = int(input("Enter Choice"))
+    if choice1>3:
+        print("Please Enter Valid Choice")
+
+    if choice1 == 1:
+        h1 = hashTable()
+        choice2 = 0
+        while(choice2 != 4):
+            print("************************")
+            print("1. Insert              *")
+            print("2. Search              *")
+            print("3. Display             *")
+            print("4. Back                *")
+            print("************************")
+
+            choice2 = int(input("Enter Choice"))
+            if choice2>4:
+                print("Please Enter Valid Choice")
+
+            if(choice2==1):
+                record = input_record()
+                h1.insert(record)
+
+            elif(choice2 == 2):
+                record = input_record()
+                position = h1.search(record)
+
+            elif(choice2 == 3):
+                h1.display()
+
+        
+
+    elif choice1 == 2:
+        h2 = doubleHashTable()
+        choice2 = 0
+        while(choice2 != 4):
+            print("************************")
+            print("1. Insert              *")
+            print("2. Search              *")
+            print("3. Display             *")
+            print("4. Back                *")
+            print("************************")
+
+            choice2 = int(input("Enter Choice"))
+            if choice2>4:
+                print("Please Enter Valid Choice")
+
+            if(choice2==1):
+                record = input_record()
+                h2.insert(record)
+
+            elif(choice2 == 2):
+                record = input_record()
+                position = h2.search(record)
+
+            elif(choice2 == 3):
+                h2.display()
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ # Experiment 1 : To create ADT that implements the "set" concepts. 
+ a. Add (newElement) -Place a value into the set 
+b. Remove (element) Remove the value 
+c. Contains (element) Return true if element is in collection 
+d. Size () Return number of values in collection Iterator () Return an iterator used to loop over collection 
+e. Intersection of two sets 
+f. Union of two sets 
+g. Difference between two sets 
+h. Subset
+
+
+
+#================================================================================================================================================================================================================================================================
+
+# SetOperations.py ( a tab with this name )
+
+
+class Set :    
+    # Creates an empty set instance.
+    def __init__( self, initElementsCount ):
+        self._s = []
+        for i in range(initElementsCount) :
+            e = int(input("Enter Element {}: ".format(i+1)))
+            self.add(e)
+
+
+    def get_set(self):
+        return self._s
+    
+    def __str__(self):
+        string = "\n{ "
+        for i in range(len(self.get_set())):
+            string = string + str(self.get_set()[i])
+            if i != len(self.get_set())-1:
+                string = string + " , "
+        string = string + " }\n"
+        return string
+
+    # Returns the number of items in the set.
+    def __len__( self ):
+        return len( self._s )
+
+    # Determines if an element is in the set.
+    def __contains__( self, e ):
+        return e in self._s   
+
+   # Determines if the set is empty.
+    def isEmpty( self ):
+        return len(self._s) == 0
+
+   # Adds a new unique element to the set. 
+    def add( self, e ):                  
+        if e not in self :
+            self._s.append( e )   
+
+   # Removes an e from the set.
+    def remove( self, e ):
+        if e in self.get_set():
+            self.get_set().remove(e)
+
+   # Determines if this set is equal to setB.
+    def __eq__( self, setB ):                 
+        if len( self ) != len( setB ) :
+            return False
+        else :
+            return self.isSubsetOf( setB )                  
+
+   # Determines if this set is a subset of setB.
+    def isSubsetOf( self, setB ):           
+     for e in setB.get_set() :
+         if e not in self.get_set() :
+             return False
+     return True 
+
+  # Determines if this set is a proper subset of setB.
+    def isProperSubset( self, setB ):
+        if self.isSubsetOf(setB) and not setB.isSubsetOf(self):
+            return True
+        return False
+
+   # Creates a new set from the union of this set and setB.
+    def union( self, setB ):                 
+     newSet = self  
+     for e in setB :
+         if e not in self.get_set() :
+             newSet.add(e)
+     return newSet                           
+
+   # Creates a new set from the intersection: self set and setB.
+    def intersect( self, setB ):
+        newSet = Set(0)
+        for i in range(len(self.get_set())) :
+            for j in range(len(setB.get_set())) :
+                if self.get_set()[i] == setB.get_set()[j] :
+                    newSet.add(self.get_set()[i])
+        return newSet
+
+    # Creates a new set from the difference: self set and setB.
+    def difference( self, setB ):
+        newSet = Set(0)
+        for e in self.get_set() :
+            if e not in setB.get_set():
+                newSet.add(e)
+        return newSet
+
+     # Creates the iterator for traversing the list of items
+    def __iter__( self ):
+        return iter(self._s)
+
+
+#============================================================================================================================================================================================================================================================
+
+# Menu.py ( a separate tab with this name )
+
+
+from SetOperations import Set
+
+def createSet():
+    n=int(input("Enter number of Elements in set"))
+    s = Set(n)  
+    return s
+
+choice = 0
+print("Create Set A")
+s1 = createSet()
+print(str(s1))
+while choice != 10:
+    print("|-------------------|")
+    print("| Menu              |")
+    print("| 1.Add             |")
+    print("| 2.Remove          |")
+    print("| 3.Contains        |")
+    print("| 4.Size            |")
+    print("| 5.Intersection    |")
+    print("| 6.Union           |")
+    print("| 7.Difference      |")
+    print("| 8.Subset          |")
+    print("| 9.Proper Subset   |")
+    print("| 10.Exit           |")
+    print("|-------------------|")
+
+    choice = int(input("Enter Choice"))
+
+    if choice==1:
+        e = int(input("Enter Number to Add"))
+        s1.add(e)
+        print(str(s1))
+
+    elif choice==2:
+        e = int(input("Enter Number to Remove"))
+        s1.remove(e)
+        print(str(s1))
+
+    elif choice==3:
+        e = int(input("Enter Number to Search"))
+        if e in s1:
+            print("Number Present in Set")
+        else:
+            print("Number is not Present in Set")
+
+        print(str(s1))
+
+    elif choice==4:
+        print("Set Contains {} elements".format(len(s1)))
+
+    elif choice==5:
+        print("Create a Set B for doing Intersection Operation")
+        s2 = createSet()
+        s3 = s1.intersect(s2)
+        print("Set A = "+str(s1))
+        print("Set B = "+str(s2))
+        print("Intersection = "+str(s3))
+
+    elif choice==6:
+        print("Create a Set B for doing Union Operation")
+        s2 = createSet()
+        s3 = s1.union(s2)
+        print("Set A = "+str(s1))
+        print("Set B = "+str(s2))
+        print("Union = "+str(s3))
+
+    elif choice==7:
+        print("Create a Set B for calculating Set Difference")
+        s2 = createSet()
+        s3 = s1.difference(s2)
+        print("Set A = "+str(s1))
+        print("Set B = "+str(s2))
+        print("Difference = "+str(s3))
+
+    elif choice==8:
+        print("Create a Set B for checking Subset or not")
+        s2 = createSet()
+        isSubset = s1.isSubsetOf(s2)
+        print("Set A = "+str(s1))
+        print("Set B = "+str(s2))
+        if isSubset:
+            print("Set B is the Subset of Set A")
+        else:
+            print("Set B is not a Subset of Set A")
+
+    elif choice==9:
+        print("Create a Set B for checking ProperSubset or not")
+        s2 = createSet()
+        isProperSubset = s1.isProperSubset(s2)
+        print("Set A = "+str(s1))
+        print("Set B = "+str(s2))
+        if isProperSubset:
+            print("Set B is the Proper Subset of Set A")
+        else:
+            print("Set B is not a Proper Subset of Set A")
+
+    elif choice==10:
+        break;
+
+    elif choice<1 or choice>10:
+        print("Please Enter Valid Choice")
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Experiement 2 : A book consists of chapters, chapters consist of
+sections and sections consist of subsections. Construct
+a tree and print the nodes. Find the time and space
+requirements of your method.
+
+
+#include<iostream>
+#include<stdlib.h>
+#include<string.h>
+
+using namespace std;
+
+struct node
+{  
+    char name[20];
+    node *next;
+    node *down;
+    int flag;
+};
+
+class Gll
+{   
+    char ch[20];
+    int n, i;
+    node *head = NULL, *temp = NULL, *t1 = NULL, *t2 = NULL;
+
+public:
+    node *create();
+    void insertb();
+    void insertc();
+    void inserts();
+    void insertss();
+    void displayb();
+};
+
+node *Gll::create()
+{
+    node *p = new(struct node);
+    p->next = NULL;
+    p->down = NULL;
+    p->flag = 0;
+    cout << "\n enter the name";
+    cin >> p->name;
+    return p;
+}
+
+void Gll::insertb()
+{
+    if (head == NULL)
+    {
+        t1 = create();
+        head = t1;
+    }
+    else
+    {
+        cout << "\n book exist";
+    }
+}
+
+void Gll::insertc()
+{
+    if (head == NULL)
+    {
+        cout << "\n there is no book";
+    }
+    else
+    {
+        cout << "\n how many chapters you want to insert";
+        cin >> n;
+        for (i = 0; i < n; i++)
+        {
+            t1 = create();
+            if (head->flag == 0)
+            {
+                head->down = t1;
+                head->flag = 1;
+            }
+            else
+            {
+                temp = head;
+                temp = temp->down;
+                while (temp->next != NULL)
+                    temp = temp->next;
+                temp->next = t1;
+            }
+        }
+    }
+}
+
+void Gll::inserts()
+{
+    if (head == NULL)
+    {
+        cout << "\n there is no book";
+    }
+    else
+    {
+        cout << "\n Enter the name of chapter on which  you want to enter the section";
+        cin >> ch;
+        temp = head;
+        if (temp->flag == 0)
+        {
+            cout << "\n There are no chapters on in the book";
+        }
+        else
+        {
+            temp = temp->down;
+            while (temp != NULL)
+            {
+                if (!strcmp(ch, temp->name))
+                {
+                    cout << "\n how many sections you want to enter";
+                    cin >> n;
+                    for (i = 0; i < n; i++)
+                    {
+                        t1 = create();
+                        if (temp->flag == 0)
+                        {
+                            temp->down = t1;
+                            temp->flag = 1;
+                            cout << "\n******";
+                            t2 = temp->down;
+                        }
+                        else
+                        {
+                            cout << "\n#####";
+                            while (t2->next != NULL)
+                            {
+                                t2 = t2->next;
+                            }
+                            t2->next = t1;
+                        }
+                    }
+                    break;
+                }
+                temp = temp->next;
+            }
+        }
+    }
+}
+
+void Gll::insertss()
+{
+    if (head == NULL)
+    {
+        cout << "\n there is no book";
+    }
+    else
+    {
+        cout << "\n Enter the name of chapter on which  you want to enter the section";
+        cin >> ch;
+        temp = head;
+        if (temp->flag == 0)
+        {
+            cout << "\n there are no chapters in the book";
+        }
+        else
+        {
+            temp = temp->down;
+            while (temp != NULL)
+            {
+                if (!strcmp(ch, temp->name))
+                {
+                    cout << "\n enter the name of section in which you want to enter the subsection";
+                    cin >> ch;
+                    if (temp->flag == 0)
+                    {
+                        cout << "\n there are no sections";
+                    }
+                    else
+                    {
+                        temp = temp->down;
+                        while (temp != NULL)
+                        {
+                            if (!strcmp(ch, temp->name))
+                            {
+                                cout << "\n how many subsections you want to enter";
+                                cin >> n;
+                                for (i = 0; i < n; i++)
+                                {
+                                    t1 = create();
+                                    if (temp->flag == 0)
+                                    {
+                                        temp->down = t1;
+                                        temp->flag = 1;
+                                        cout << "\n******";
+                                        t2 = temp->down;
+                                    }
+                                    else
+                                    {
+                                        cout << "\n#####";
+                                        while (t2->next != NULL)
+                                        {
+                                            t2 = t2->next;
+                                        }
+                                        t2->next = t1;
+                                    }
+                                }
+                                break;
+                            }
+                            temp = temp->next;
+                        }
+                    }
+                }
+                temp = temp->next;
+            }
+        }
+    }
+}
+
+void Gll::displayb()
+{
+    if (head == NULL)
+    {
+        cout << "\n book not exist";
+    }
+    else
+    {
+        temp = head;
+        cout << "\n NAME OF BOOK:  " << temp->name;
+        if (temp->flag == 1)
+        {
+            temp = temp->down;
+
+            while (temp != NULL)
+            {
+                cout << "\n\t\tNAME OF CHAPTER:  " << temp->name;
+                t1 = temp;
+                if (t1->flag == 1)
+                {
+                    t1 = t1->down;
+                    while (t1 != NULL)
+                    {
+                        cout << "\n\t\t\t\tNAME OF SECTION:  " << t1->name;
+                        t2 = t1;
+                        if (t2->flag == 1)
+                        {
+                            t2 = t2->down;
+                            while (t2 != NULL)
+                            {
+                                cout << "\n\t\t\t\t\t\tNAME OF SUBSECTION:  " << t2->name;
+                                t2 = t2->next;
+                            }
+                        }
+                        t1 = t1->next;
+                    }
+                }
+                temp = temp->next;
+            }
+        }
+    }
+}
+
+int main()
+{
+    Gll g;
+    int x;
+    while (1)
+    {
+        cout << "\n\n enter your choice";
+        cout << "\n 1.insert book";
+        cout << "\n 2.insert chapter";
+        cout << "\n 3.insert section";
+        cout << "\n 4.insert subsection";
+        cout << "\n 5.display book";
+        cout << "\n 6.exit";
+        cin >> x;
+        switch (x)
+        {
+        case 1:
+            g.insertb();
+            break;
+        case 2:
+            g.insertc();
+            break;
+        case 3:
+            g.inserts();
+            break;
+        case 4:
+            g.insertss();
+            break;
+        case 5:
+            g.displayb();
+            break;
+        case 6:
+            exit(0);
+        }
+    }
+    return 0;
+}
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// experiement 2 : Convert given binary tree into threaded binary tree.
+Analyze time and space complexity of the
+algorithm.
+
+
+
+#include <iostream>
+using namespace std;
+struct Node {
+struct Node *left, *right;
+int data;
+int lthread;
+int rthread;
+};
+class TBST
+{  public:
+    struct Node* root = NULL;
+   int key;
+  struct Node* insert(struct Node* root, int ikey);  
+  struct Node* inSucc(struct Node* ptr);
+  struct Node* inorderSuccessor(struct Node* ptr);
+  void inorder(struct Node* root);
+  struct Node* inPred(struct Node* ptr);
+  struct Node* caseA(struct Node* root, struct Node* par,
+struct Node* ptr);
+struct Node* caseB(struct Node* root, struct Node* par,
+struct Node* ptr);
+struct Node* caseC(struct Node* root, struct Node* par,
+struct Node* ptr);
+struct Node* delThreadedBST(struct Node* root, int dkey);
+};
+struct Node* TBST::insert(struct Node* root, int ikey)
+{
+  Node* ptr = root;
+  Node* par = NULL;
+while (ptr != NULL) {
+par = ptr; 
+if (ikey<ptr->data) {
+if (ptr->lthread == 1)
+ptr = ptr->left;
+else
+break;
+          }
+else {
+if (ptr->rthread == 1)
+ptr = ptr->right;
+else
+break;
+              }
+         }
+    Node* tmp = new Node;
+tmp->data = ikey;
+tmp->lthread = 0;
+tmp->rthread = 0;
+if (par == NULL) {
+root = tmp;
+tmp->left = NULL;
+tmp->right = NULL;
+    }
+else if (ikey< (par->data)) {
+tmp->left = par->left;
+tmp->right = par;
+par->lthread = 1;
+par->left = tmp;
+        }
+else {
+tmp->left = par;
+tmp->right = par->right;
+par->rthread = 1;
+par->right = tmp;
+     }
+return root;
+ }
+struct Node* TBST::inSucc(struct Node* ptr)
+{
+if (ptr->rthread == 0)
+return ptr->right;
+
+ptr = ptr->right;
+while (ptr->lthread == 1)
+ptr = ptr->left;
+
+return ptr;
+}
+struct Node* TBST::inorderSuccessor(struct Node* ptr)
+{
+if (ptr->rthread == 0)
+return ptr->right;
+ptr = ptr->right;
+while (ptr->lthread == 1)
+ptr = ptr->left;
+return ptr;
+}
+void TBST:: inorder(struct Node* root)
+{
+if (root == NULL)
+cout<<"Tree is empty";
+struct Node* ptr = root;
+while (ptr->lthread == 1)
+ptr = ptr->left;
+while (ptr != NULL) {
+cout<<ptr->data;
+ptr = inorderSuccessor(ptr);
+       }
+}
+struct Node* TBST::inPred(struct Node* ptr)
+{
+if (ptr->lthread == 0)
+return ptr->left;
+
+ptr = ptr->left;
+while (ptr->rthread == 1)
+ptr = ptr->right;
+return ptr;
+}
+struct Node* TBST::caseA(struct Node* root, struct Node* par,
+struct Node* ptr)
+{
+if (par == NULL)
+root = NULL;
+else if (ptr == par->left) {
+par->lthread = 0;
+par->left = ptr->left;
+          }
+else
+          {
+par->rthread = 0;
+par->right = ptr->right;
+        }
+free(ptr);
+return root;
+}
+struct Node* TBST::caseB(struct Node* root, struct Node* par,
+struct Node* ptr)
+{
+struct Node* child;
+if (ptr->lthread == 1)
+child = ptr->left;
+else
+child = ptr->right;
+if (par == NULL)
+root = child;
+
+else if (ptr == par->left)
+par->left = child;
+else
+par->right = child;
+
+    // Find successor and predecessor
+    Node* s = inSucc(ptr);
+    Node* p = inPred(ptr);
+
+    // If ptr has left subtree.
+if (ptr->lthread == 1)
+p->right = s;
+
+    // If ptr has right subtree.
+else {
+if (ptr->rthread == 1)
+s->left = p;
+    }
+
+free(ptr);
+return root;
+}
+
+// Here 'par' is pointer to parent Node and 'ptr' is
+// pointer to current Node.
+struct Node* TBST::caseC(struct Node* root, struct Node* par,
+struct Node* ptr)
+{
+    // Find inorder successor and its parent.
+struct Node* parsucc = ptr;
+struct Node* succ = ptr->right;
+
+    // Find leftmost child of successor
+while (succ->lthread==1) {
+parsucc = succ;
+succ = succ->left;
+    }
+
+ptr->data = succ->data;
+
+if (succ->lthread == 0 &&succ->rthread == 0)
+root = caseA(root, parsucc, succ);
+else
+root = caseB(root, parsucc, succ);
+
+return root;
+}
+
+// Deletes a key from threaded BST with given root and
+// returns new root of BST.
+struct Node* TBST::delThreadedBST(struct Node* root, int dkey)
+{
+    // Initialize parent as NULL and ptrent
+    // Node as root.
+struct Node *par = NULL, *ptr = root;
+
+    // Set 0 if key is found
+int found = 0;
+
+    // Search key in BST : find Node and its
+    // parent.
+while (ptr != NULL) {
+if (dkey == ptr->data) {
+found = 1;
+break;
+        }
+par = ptr;
+if (dkey<ptr->data) {
+if (ptr->lthread == 1)
+ptr = ptr->left;
+else
+break;
+        }
+else {
+if (ptr->rthread == 1)
+ptr = ptr->right;
+else
+break;
+        }
+    }
+
+if (found == 0)
+cout<<"dkey not present in tree\n";
+
+    // Two Children
+else if (ptr->lthread == 1 &&ptr->rthread == 1)
+root = caseC(root, par, ptr);
+
+    // Only Left Child
+else if (ptr->lthread == 1)
+root = caseB(root, par, ptr);
+
+    // Only Right Child
+else if (ptr->rthread == 1)
+root = caseB(root, par, ptr);
+
+    // No child
+else
+root = caseA(root, par, ptr);
+
+return root;
+}
+
+// Driver Program
+int main()
+{
+    TBST t;
+    struct Node* root = NULL;
+   int key;
+while(1)
+   {
+int ch;
+cout<<"\n enter the choice";
+cout<<"\n 1.insert data";
+cout<<"\n 2.delete a data";
+cout<<"\n 3.display all data";
+cout<<"\n 4.exit";
+cin>>ch;
+switch(ch)
+   {
+case 1:
+cout<<"enter data to be inserted";
+cin>>key;
+root = t.insert(root, key);
+break;
+case 2:
+cout<<"enter data to be deleted";
+cin>>key;
+root = t.delThreadedBST(root, key);
+break;
+case 3:  
+t.inorder(root);
+break;
+case 4:  exit(0);
+
+default:
+cout<<"\n invalid entry";
+    }             
+    }
+return 0;
+}  
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Experiment no.3 :Implement a graph data structure using adjacency list/matrix representation and
+perform BFS and DFS on it.
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+(Make a separate tab for Adj_mat)
+
+
+#include<iostream>
+using namespace std;
+
+void PrintMat(int mat[][20], int n)
+{
+	int i, j;
+ 	cout<<"\n\n"<<"";
+	for(i = 0; i < n; i++)
+	cout<<"("<<i+1<<")";
+	cout<<"\n\n";
+ 	// Print 1 if the corresponding vertexes are connected otherwise 0.
+	for(i = 0; i < n; i++)
+	{
+	cout<<"("<<i+1<<")";
+		for(j = 0; j < n; j++)
+		{
+		cout<<mat[i][j];
+		}
+		cout<<"\n\n";
+	}
+}
+ 
+int main()
+{               int i, j, v;
+ 	cout<<"Enter the number of vertexes: ";
+	cin>>v;
+ 	int  mat[20][20];
+ 	cout<<"\n";
+	// Take input of the adjacency of each pair of vertexes.
+	for(i = 0; i < v; i++)
+	{for(j = i; j < v; j++)
+		{
+			if(i != j)
+			{
+			cout<<"Enter 1 if the vertex "<<i+1<<" is adjacent to "<<j+1<<", otherwise 0: ";
+	cin>>mat[i][j];
+ 	mat[j][i] = mat[i][j];
+	}
+	else
+	mat[i][j] = 0;
+		}
+	}
+ 
+	PrintMat(mat, v);
+}
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+( Make a separate tab for ADJA_LI )
+
+#include<iostream>
+using namespace std;
+struct node
+{
+    int vertex;
+    struct node *next;
+}*adj_list[10];
+void read_graph(struct node *adj_list[10]) {
+    int i, j,n;
+    char reply;
+    struct node *p, *c;
+    cout << "\n How Many Vertices ? : ";
+    cin >> n;
+      for (i = 1; i <= n; i++)
+        adj_list[i] = NULL;
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            if (i == j)
+                continue;
+            cout << "\n Vertices " << i << " & " << j << " are Adjacent ? (Y/N) :";
+            cin >> reply;
+            if (reply == 'y' || reply == 'Y') {
+                c = new node;
+                c->vertex = j;
+                c->next = NULL;
+                if (adj_list[i] == NULL)
+                    adj_list[i] = c;
+                else {
+                    p = adj_list[i];
+                    while (p->next != NULL)
+                        p = p->next;
+                   
+                }
+            }
+        }
+    }
+}
+
+int main()
+{
+    read_graph(adj_list);
+    return 0;
+}
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+( make a separate tab for the traversal )
+
+#include<iostream>
+#include<stack>
+#include<queue>
+using namespace std;
+
+struct node {
+    int vertex;
+    node *next;
+}*adj_list[10];
+
+class Graph {
+private:
+    int n;
+public:
+    stack<int> s;
+    queue<int> q;
+    void read_graph(struct node *adj_list[10], int n);
+    void create();
+    void dfs();
+    void bfs();
+};
+
+void Graph::read_graph(struct node *adj_list[10], int n) {
+    int i, j;
+    char reply;
+    struct node *p, *c;
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            if (i == j)
+                continue;
+            cout << "\n Vertices " << i << " & " << j << " are Adjacent ? (Y/N) :";
+            cin >> reply;
+            if (reply == 'y' || reply == 'Y') {
+                c = new node;
+                c->vertex = j;
+                c->next = NULL;
+                if (adj_list[i] == NULL)
+                    adj_list[i] = c;
+                else {
+                    p = adj_list[i];
+                    while (p->next != NULL)
+                        p = p->next;
+                    p->next = c;
+                }
+            }
+        }
+    }
+}
+
+void Graph::create() {
+    struct node *p;
+    int deg, i;
+    cout << "\n How Many Vertices ? : ";
+    cin >> n;
+    for (i = 1; i <= n; i++)
+        adj_list[i] = NULL;
+    read_graph(adj_list, n);
+    cout << "\n Vertex \t Degree ";
+    for (i = 1; i <= n; i++) {
+        deg = 0;
+        p = adj_list[i];
+        while (p != NULL) {
+            deg++;
+            p = p->next;
+        }
+        cout << "\n\n" << i << "\t\t" << deg << "\n\n";
+    }
+}
+
+void Graph::dfs() {
+    int sv, num;
+    node *t;
+    cout << "Enter starting vertex: ";
+    cin >> sv;
+    int visited[10] = {0};
+    s.push(sv);
+    while (!s.empty()) {
+        num = s.top();
+        s.pop();
+        if (visited[num] == 0) {
+            cout << num << " ";
+            visited[num] = 1;
+        }
+        t = adj_list[num];
+        while (t != NULL) {
+            if (visited[t->vertex] == 0)
+                s.push(t->vertex);
+            t = t->next;
+        }
+    }
+    cout << endl;
+}
+
+void Graph::bfs() {
+    int sv, num;
+    node *t;
+    cout << "Enter starting vertex: ";
+    cin >> sv;
+    int visited[10] = {0};
+    q.push(sv);
+    while (!q.empty()) {
+        num = q.front();
+        q.pop();
+        if (visited[num] == 0) {
+            cout << num << " ";
+            visited[num] = 1;
+        }
+        t = adj_list[num];
+        while (t != NULL) {
+            if (visited[t->vertex] == 0)
+                q.push(t->vertex);
+            t = t->next;
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    Graph obj;
+    obj.create();
+    cout << "DFS Traversal: ";
+    obj.dfs();
+    cout << "BFS Traversal: ";
+    obj.bfs();
+    return 0;
+}
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Exp 4 : A Dictionary stores keywords &amp; its meanings. Provide facility for adding new
+keywords, deleting keywords, updating values of any entry. Provide facility to display whole data
+sorted in ascending/ Descending order. Also find how many maximum comparisons may require for
+finding any keyword. Use Height balance tree and find the complexity for finding a keyword.
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+struct Node {
+    string keyword;
+    string meaning;
+    Node* left;
+    Node* right;
+    int height;
+};
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int height(Node* node) {
+    if (node == nullptr)
+        return 0;
+    return node->height;
+}
+
+Node* newNode(string key, string value) {
+    Node* node = new Node;
+    node->keyword = key;
+    node->meaning = value;
+    node->left = nullptr;
+    node->right = nullptr;
+    node->height = 1;
+    return node;
+}
+
+Node* rightRotate(Node* y) {
+    Node* x = y->left;
+    Node* T2 = x->right;
+
+    x->right = y;
+    y->left = T2;
+
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+
+    return x;
+}
+
+Node* leftRotate(Node* x) {
+    Node* y = x->right;
+    Node* T2 = y->left;
+
+    y->left = x;
+    x->right = T2;
+
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+
+    return y;
+}
+
+int getBalance(Node* node) {
+    if (node == nullptr)
+        return 0;
+    return height(node->left) - height(node->right);
+}
+
+Node* insert(Node* node, string key, string value) {
+    if (node == nullptr)
+        return newNode(key, value);
+
+    if (key < node->keyword)
+        node->left = insert(node->left, key, value);
+    else if (key > node->keyword)
+        node->right = insert(node->right, key, value);
+    else {
+        cout << "Keyword already exists. Updating value." << endl;
+        node->meaning = value;
+        return node;
+    }
+
+    node->height = 1 + max(height(node->left), height(node->right));
+
+    int balance = getBalance(node);
+
+    if (balance > 1 && key < node->left->keyword)
+        return rightRotate(node);
+
+    if (balance < -1 && key > node->right->keyword)
+        return leftRotate(node);
+
+    if (balance > 1 && key > node->left->keyword) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+
+    if (balance < -1 && key < node->right->keyword) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+
+    return node;
+}
+
+Node* minValueNode(Node* node) {
+    Node* current = node;
+    while (current->left != nullptr)
+        current = current->left;
+    return current;
+}
+
+Node* deleteNode(Node* root, string key) {
+    if (root == nullptr)
+        return root;
+
+    if (key < root->keyword)
+        root->left = deleteNode(root->left, key);
+    else if (key > root->keyword)
+        root->right = deleteNode(root->right, key);
+    else {
+        if ((root->left == nullptr) || (root->right == nullptr)) {
+            Node* temp = root->left ? root->left : root->right;
+            if (temp == nullptr) {
+                temp = root;
+                root = nullptr;
+            } else
+                *root = *temp;
+            delete temp;
+        } else {
+            Node* temp = minValueNode(root->right);
+            root->keyword = temp->keyword;
+            root->right = deleteNode(root->right, temp->keyword);
+        }
+    }
+
+    if (root == nullptr)
+        return root;
+
+    root->height = 1 + max(height(root->left), height(root->right));
+
+    int balance = getBalance(root);
+
+    if (balance > 1 && getBalance(root->left) >= 0)
+        return rightRotate(root);
+
+    if (balance > 1 && getBalance(root->left) < 0) {
+        root->left = leftRotate(root->left);
+        return rightRotate(root);
+    }
+
+    if (balance < -1 && getBalance(root->right) <= 0)
+        return leftRotate(root);
+
+    if (balance < -1 && getBalance(root->right) > 0) {
+        root->right = rightRotate(root->right);
+        return leftRotate(root);
+    }
+
+    return root;
+}
+
+void inorder(Node* root) {
+    if (root != nullptr) {
+        inorder(root->left);
+        cout << root->keyword << " : " << root->meaning << endl;
+        inorder(root->right);
+    }
+}
+
+void reverseInorder(Node* root) {
+    if (root != nullptr) {
+        reverseInorder(root->right);
+        cout << root->keyword << " : " << root->meaning << endl;
+        reverseInorder(root->left);
+    }
+}
+
+Node* search(Node* root, string key, int& comparisons) {
+    comparisons++;
+    if (root == nullptr || root->keyword == key)
+        return root;
+
+    if (root->keyword < key)
+        return search(root->right, key, comparisons);
+    return search(root->left, key, comparisons);
+}
+
+int main() {
+    Node* root = nullptr;
+    int choice;
+    string keyword, meaning;
+    int comparisons;
+
+    do {
+        cout << "\nDictionary Menu:\n";
+        cout << "1. Add New Keyword\n";
+        cout << "2. Delete Keyword\n";
+        cout << "3. Update Meaning\n";
+        cout << "4. Display in Ascending Order\n";
+        cout << "5. Display in Descending Order\n";
+        cout << "6. Find Keyword\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter Keyword: ";
+                cin >> keyword;
+                cout << "Enter Meaning: ";
+                cin >> meaning;
+                root = insert(root, keyword, meaning);
+                break;
+            case 2:
+                cout << "Enter Keyword to Delete: ";
+                cin >> keyword;
+                root = deleteNode(root, keyword);
+                break;
+            case 3:
+                cout << "Enter Keyword to Update: ";
+                cin >> keyword;
+                cout << "Enter New Meaning: ";
+                cin >> meaning;
+                root = deleteNode(root, keyword);
+                root = insert(root, keyword, meaning);
+                break;
+            case 4:
+                cout << "Dictionary in Ascending Order:\n";
+                inorder(root);
+                break;
+            case 5:
+                cout << "Dictionary in Descending Order:\n";
+                reverseInorder(root);
+                break;
+            case 6:
+                cout << "Enter Keyword to Find: ";
+                cin >> keyword;
+                comparisons = 0;
+                search(root, keyword, comparisons);
+                if (comparisons > 0)
+                    cout << "Number of Comparisons: " << comparisons << endl;
+                else
+                    cout << "Keyword not found." << endl;
+                break;
+            case 7:
+                cout << "Exiting program.\n";
+                break;
+            default:
+                cout << "Invalid choice! Please try again.\n";
+        }
+    } while (choice != 7);
+
+    return 0;
+}
+//////////////////////////////////////////////////////////////////////
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+// Structure for a node in AVL tree
+struct Node {
+    string keyword;
+    string meaning;
+    int height;
+    Node* left;
+    Node* right;
+
+    Node(string key, string value) : keyword(key), meaning(value), height(1), left(nullptr), right(nullptr) {}
+};
+
+// Function to get height of the node
+int height(Node* node) {
+    if (node == nullptr) return 0;
+    return node->height;
+}
+
+// Function to get the balance factor of a node
+int balanceFactor(Node* node) {
+    if (node == nullptr) return 0;
+    return height(node->left) - height(node->right);
+}
+
+// Function to rotate right
+Node* rotateRight(Node* y) {
+    Node* x = y->left;
+    Node* T2 = x->right;
+
+    // Perform rotation
+    x->right = y;
+    y->left = T2;
+
+    // Update heights
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+
+    return x;
+}
+
+// Function to rotate left
+Node* rotateLeft(Node* x) {
+    Node* y = x->right;
+    Node* T2 = y->left;
+
+    // Perform rotation
+    y->left = x;
+    x->right = T2;
+
+    // Update heights
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+
+    return y;
+}
+
+// Function to insert a node into AVL tree
+Node* insert(Node* node, string key, string value) {
+    if (node == nullptr) return new Node(key, value);
+
+    if (key < node->keyword)
+        node->left = insert(node->left, key, value);
+    else if (key > node->keyword)
+        node->right = insert(node->right, key, value);
+    else // Key already exists, update the value
+        node->meaning = value;
+
+    // Update height of this ancestor node
+    node->height = 1 + max(height(node->left), height(node->right));
+
+    // Get the balance factor to check whether this node became unbalanced
+    int balance = balanceFactor(node);
+
+    // If the node becomes unbalanced, perform rotations
+    if (balance > 1 && key < node->left->keyword)
+        return rotateRight(node);
+
+    if (balance < -1 && key > node->right->keyword)
+        return rotateLeft(node);
+
+    if (balance > 1 && key > node->left->keyword) {
+        node->left = rotateLeft(node->left);
+        return rotateRight(node);
+    }
+
+    if (balance < -1 && key < node->right->keyword) {
+        node->right = rotateRight(node->right);
+        return rotateLeft(node);
+    }
+
+    return node;
+}
+
+// Function to search for a keyword in AVL tree
+Node* search(Node* root, string key, int& comparisons) {
+    while (root != nullptr) {
+        comparisons++;
+        if (key == root->keyword)
+            return root;
+        else if (key < root->keyword)
+            root = root->left;
+        else
+            root = root->right;
+    }
+    return nullptr;
+}
+
+// Function to print AVL tree in inorder traversal
+void inorder(Node* root) {
+    if (root != nullptr) {
+        inorder(root->left);
+        cout << root->keyword << " : " << root->meaning << endl;
+        inorder(root->right);
+    }
+}
+
+int main() {
+    Node* root = nullptr;
+    int comparisons = 0;
+
+    // Adding keywords
+    root = insert(root, "apple", "a fruit");
+    root = insert(root, "banana", "a fruit");
+    root = insert(root, "orange", "a fruit");
+    root = insert(root, "apple", "a tech company");
+
+    // Displaying sorted data
+    cout << "Sorted Data (Ascending Order):" << endl;
+    inorder(root);
+
+    // Searching for a keyword
+    string key = "banana";
+    Node* result = search(root, key, comparisons);
+    if (result != nullptr)
+        cout << "\nMeaning of " << key << " is: " << result->meaning << endl;
+    else
+        cout << "\n" << key << " not found in the dictionary." << endl;
+
+    cout << "Number of comparisons made during search: " << comparisons << endl;
+
+    return 0;
+}
+
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+exp 5: Consider a scenario for Hospital to cater services to different kinds of
+patients as Serious (top priority), b) non-serious (medium priority), c) General Checkup (Least
+priority). Implement the priority queue to cater services to the patients.
+
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+enum PatientType {
+    SERIOUS,
+    NON_SERIOUS,
+    GENERAL_CHECKUP
+};
+
+struct Patient {
+    string name;
+    PatientType type;
+};
+
+class PriorityQueue {
+private:
+    Patient patients[5];
+    int front;
+    int rear;
+    int size;
+public:
+    PriorityQueue() {
+        front = -1;
+        rear = -1;
+        size = 5; // Set the size of the queue
+    }
+bool isEmpty() {
+ return front == -1;
+    }
+bool isFull() {
+ return rear == size - 1;
+    }
+void enqueue(string name, PatientType type) {
+  if (isFull()) {
+   cout << "Queue is full. Cannot enqueue more patients." << endl;
+      }
+  Patient patient;
+  patient.name = name;
+  patient.type = type;
+    rear++;
+    patients[rear] = patient;
+    if (front == -1) {
+    front = 0;
+    }
+for (int i = rear; i > front; i--) {
+ if (patients[i].type < patients[i - 1].type) 
+   {
+    swap(patients[i], patients[i - 1]);
+    } else 
+      break;
+ }
+}
+void dequeue() {
+  if (isEmpty()) {
+    cout << "Queue is empty. No patients to dequeue." << endl;
+       }
+cout << "Dequeued: " << patients[front].name << endl;
+        if (front == rear) {
+            front = rear = -1;
+        } else {
+            front++;
+        }
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty" << endl;
+            return;
+        }
+
+        cout << "Discharge order:" << endl;
+        for (int i = front; i <= rear; i++) {
+            cout << patients[i].name << endl;
+        }
+    }
+};
+
+int main() {
+    int ch;
+    PriorityQueue p;
+    string name;
+    int typeInt;
+
+    while (true) {
+        cout << "-----Welcome to the hospital-----\n";
+        cout << "What do you want?\n";
+        cout << "1. Register a patient\n";
+        cout << "2. Discharge a patient\n";
+        cout << "3. Display discharge order\n";
+        cout << "4. Exit\n";
+
+        cin >> ch;
+
+        switch (ch) {
+            case 1:
+                cout << "Enter the name of the patient: ";
+                cin >> name;
+                cout << "Enter the type of patient (0 - SERIOUS, 1 - NON_SERIOUS, 2 - GENERAL_CHECKUP): ";
+                cin >> typeInt;
+
+                if (typeInt < 0 || typeInt > 2) {
+                    cout << "Invalid patient type. Please enter a valid type." << endl;
+                    break;
+                }
+
+                p.enqueue(name, static_cast<PatientType>(typeInt));
+                cout << "Patient registered in the hospital." << endl;
+                break;
+
+            case 2:
+                p.dequeue();
+                break;
+
+            case 3:
+                p.display();
+                break;
+
+            case 4:
+                cout << "Thank you for using the hospital system." << endl;
+                exit(0);
+
+            default:
+                cout << "Invalid choice. Please enter a valid option." << endl;
+        }
+    }
+
+    return 0;
+}
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+exp 6 : Department maintains a student information. The file contains roll number,
+name, division and address. Allow user to add, delete information of student. Display information of
+particular employee. If record of student does not exist an appropriate message is displayed. If it is,
+then the system displays the student details. Use sequential file to main the data.
+
+
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+struct Student {
+    int rollNumber;
+    string name;
+    string division;
+    string address;
+};
+
+void addStudent() {
+    ofstream outFile("student_data.txt", ios::app);
+    if (!outFile) {
+        cerr << "Error opening file for writing!" << endl;
+        return;
+    }
+
+    Student newStudent;
+    cout << "Enter Roll Number: ";
+    cin >> newStudent.rollNumber;
+    cout << "Enter Name: ";
+    cin.ignore();
+    getline(cin, newStudent.name);
+    cout << "Enter Division: ";
+    getline(cin, newStudent.division);
+    cout << "Enter Address: ";
+    getline(cin, newStudent.address);
+
+    outFile << newStudent.rollNumber << " " << newStudent.name << " " << newStudent.division << " " << newStudent.address << endl;
+
+    cout << "Student information added successfully!" << endl;
+
+    outFile.close();
+}
+
+void deleteStudent(int rollNumberToDelete) {
+    ifstream inFile("student_data.txt");
+    if (!inFile) {
+        cerr << "Error opening file for reading!" << endl;
+        return;
+    }
+
+    ofstream tempFile("temp.txt");
+    if (!tempFile) {
+        cerr << "Error opening temporary file!" << endl;
+        inFile.close();
+        return;
+    }
+
+    bool found = false;
+    Student student;
+    while (inFile >> student.rollNumber >> student.name >> student.division >> student.address) {
+        if (student.rollNumber != rollNumberToDelete) {
+            tempFile << student.rollNumber << " " << student.name << " " << student.division << " " << student.address << endl;
+        } else {
+            found = true;
+        }
+    }
+
+    inFile.close();
+    tempFile.close();
+
+    remove("student_data.txt");
+    rename("temp.txt", "student_data.txt");
+
+    if (found) {
+        cout << "Student information deleted successfully!" << endl;
+    } else {
+        cout << "Student with roll number " << rollNumberToDelete << " not found!" << endl;
+    }
+}
+
+void displayStudent(int rollNumberToDisplay) {
+    ifstream inFile("student_data.txt");
+    if (!inFile) {
+        cerr << "Error opening file for reading!" << endl;
+        return;
+    }
+
+    Student student;
+    bool found = false;
+    while (inFile >> student.rollNumber >> student.name >> student.division >> student.address) {
+        if (student.rollNumber == rollNumberToDisplay) {
+            found = true;
+            cout << "Roll Number: " << student.rollNumber << endl;
+            cout << "Name: " << student.name << endl;
+            cout << "Division: " << student.division << endl;
+            cout << "Address: " << student.address << endl;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Student with roll number " << rollNumberToDisplay << " not found!" << endl;
+    }
+
+    inFile.close();
+}
+
+int main() {
+    int choice;
+    int rollNumber;
+
+    do {
+        cout << "\n1. Add Student\n2. Delete Student\n3. Display Student\n4. Exit\nEnter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                addStudent();
+                break;
+            case 2:
+                cout << "Enter Roll Number of student to delete: ";
+                cin >> rollNumber;
+                deleteStudent(rollNumber);
+                break;
+            case 3:
+                cout << "Enter Roll Number of student to display: ";
+                cin >> rollNumber;
+                displayStudent(rollNumber);
+                break;
+            case 4:
+                cout << "Exiting program." << endl;
+                break;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Exp 7 : Represent a given graph using adjacency matrix to find length of shortest
+path between every pair of vertices. Use Floyd Warshall&#39;s algorithm to implement it.
+
+
+#include <iostream>
+using namespace std;
+#define V 4
+#define INF 99999
+void printSolution(int dist[][V]);
+
+void floydWarshall(int dist[][V])
+{
+
+    int i, j, k;
+
+       for (k = 0; k < V; k++) {
+        // Pick all vertices as source one by one
+        for (i = 0; i < V; i++) {
+            // Pick all vertices as destination for the
+            // above picked source
+            for (j = 0; j < V; j++) {
+                // If vertex k is on the shortest path from
+                // i to j, then update the value of
+                // dist[i][j]
+                if (dist[i][j] > (dist[i][k] + dist[k][j])
+                    && (dist[k][j] != INF
+                        && dist[i][k] != INF))
+                    dist[i][j] = dist[i][k] + dist[k][j];
+            }
+        }
+    }
+
+    // Print the shortest distance matrix
+    printSolution(dist);
+}
+
+/* A utility function to print solution */
+void printSolution(int dist[][V])
+{
+    cout << "The following matrix shows the shortest "
+            "distances"
+            " between every pair of vertices \n";
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INF)
+                cout << "INF"
+                     << " ";
+            else
+                cout << dist[i][j] << "   ";
+        }
+        cout << endl;
+    }
+}
+
+// Driver's code
+int main()
+{
+   
+    int graph[V][V] = { { 0, 5, INF, 10 },
+                        { INF, 0, 3, INF },
+                        { INF, INF, 0, 1 },
+                        { INF, INF, INF, 0 } };
+
+    // Function call
+    floydWarshall(graph);
+    return 0;
+}
